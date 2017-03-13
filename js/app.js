@@ -1,18 +1,8 @@
 // global variables
 var playerScore = 0;
 //increments/decerements for the movement of player
-var stepX = 101;
-var stepY = 83;
-
-// common functions
-function getDifficulty() {
-    var step = 1;
-    return playerScore * step;
-}
-
-function randomInteger(minimum, maximum) {
-    return Math.floor(Math.random() * (maximum - minimum + 1) + minimum);
-} //random integer function: http://stackoverflow.com/questions/4959975/generate-random-value-between-two-numbers-in-javascript
+var STEP_X = 101;
+var STEP_Y = 83;
 
 
 function selectRandom(array) {
@@ -43,6 +33,10 @@ var Enemy = function(x, y, sprite) {
     this.speed = 100;
 };
 Enemy.prototype = Object.create(Actor.prototype);
+Enemy.prototype.getDifficulty = function() {
+    var step = 1;
+    return playerScore * step;
+}
 Enemy.prototype.hitBox = {
     'x': 101,
     'y': 83
@@ -52,7 +46,7 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.update = function(dt) {
     // update position and wrap-around if past edge
     if (this.x <= (canvas.width + this.hitBox.x / 2)) {
-        this.x += (this.speed + getDifficulty()) * dt;
+        this.x += (this.speed + this.getDifficulty()) * dt;
     } else {
         this.x = -this.hitBox.x;
         this.y = selectRandom(this.startY);
@@ -83,22 +77,22 @@ Player.prototype.update = function() {
     switch (this.action) {
         case 'up':
             if (this.y > canvas.boundaries.up) {
-                this.y -= stepY;
+                this.y -= STEP_Y;
             }
             break;
         case 'right':
             if (this.x < canvas.boundaries.right) {
-                this.x += stepX;
+                this.x += STEP_X;
             }
             break;
         case 'down':
             if (this.y < canvas.boundaries.down) {
-                this.y += stepY;
+                this.y += STEP_Y;
             }
             break;
         case 'left':
             if (this.x > canvas.boundaries.left) {
-                this.x -= stepX;
+                this.x -= STEP_X;
             }
             break;
     }
@@ -113,7 +107,7 @@ Player.prototype.update = function() {
     // reset player if on goal (water)
     if (this.y < 25) {
         playerScore += 5;
-        player.reset();
+        this.reset();
         $('#score').text(playerScore);
     }
 
