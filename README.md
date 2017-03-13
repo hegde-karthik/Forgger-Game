@@ -9,4 +9,3 @@
 
 # Controls #
  * Use arrow keys to move the player
- *
